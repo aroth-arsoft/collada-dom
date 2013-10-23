@@ -1,0 +1,42 @@
+collada-dom for Debian
+----------------------
+
+COLLADA is an XML-based file format for 3D assets. Two versions of the format
+coexist: 1.4 and 1.5.
+
+The COLLADA Document Object Model (DOM) is an application programming interface
+(API) that provides a C++ object representation of a COLLADA XML instance
+document.
+
+The library source code is partially generated from the XML schema by a php
+script. According to the version schema used, the library can be generated
+either for COLLADA version 1.4 or 1.5.
+
+The upstream package contains the generated C++ soure code for both COLLADA
+versions, so we don't need to generate it in Debian. (So this package does
+not build-depend on php.)
+
+There is some inconsistancy in the way upstream releases are versioned: they
+released 2.0, 2.1, 2.2 and then 2.2.1.
+
+Here is the collada release history (for what I can tell):
+
+ - 2008-04-30 (rev547) svn/2.1 is tagged from svn/trunk (rev546)
+ - 2008-05-05 (rev553) svn/2.1 is merged from svn/trunk (rev552) for the last
+              time
+ - 2008-05-05 2.1/colladadom.zip is available on sf.net
+ - 2008-12-04 2.2/collada-dom-2.2.zip is available on sf.net
+ - 2009-01-07 (rev794) svn/2.2 is tagged from svn/trunk (rev792)
+ - 2009-01-07 (rev795) svn/tags/2.2 is moved from svn/2.2 (rev794)
+ - 2009-01-22 (rev815) domMinorVersion is updated (2.1->2.2) in dom/Makefile
+ - 2009-04-06 svn/tags/2.2.1 (rev839) is tagged from svn/trunk (rev838)
+
+Also, the library names are not identical under Windows and Linux. For the
+2.2.1 release and COLLADA 1.4, the file names are as follow:
+
+             Windows                Linux
+   ========  ====================   =====================
+   shared    libcollada14dom22      libcollada14dom.so.2.2
+   static    libcollada14dom22-s    libcollada14dom.a
+
+ -- Sébastien Barthélémy <barthelemy@crans.org>  Tue, 20 Jul 2010 16:01:58 +0200

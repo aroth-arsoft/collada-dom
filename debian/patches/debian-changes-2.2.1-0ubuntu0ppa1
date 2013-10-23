@@ -1,0 +1,117 @@
+Description: Upstream changes introduced in version 2.2.1-0ubuntu0ppa1
+ This patch has been created by dpkg-source during the package build.
+ Here's the last changelog entry, hopefully it gives details on why
+ those changes were made:
+ .
+ collada-dom (2.2.1-0ubuntu0ppa1) lucid; urgency=low
+ .
+   * Initial release (Closes: #589152), based on the work of Benjamin Bozou
+     and Gregory Potdevin.
+     This version is based on the release 2.2.1 of collada-dom, which is not
+     available as a download but as an svn tag on sourceforge. The upstream
+     release is repackaged because of non DFSG-compatible test files.
+     In the process, code copies and sister project (rt, fx, viewer) are
+     removed too. See debian/repackage.sh for details.
+ .
+ The person named in the Author field signed this changelog entry.
+Author: Sébastien Barthélémy <barthelemy@crans.org>
+Bug-Debian: http://bugs.debian.org/589152
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: http://bugs.debian.org/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- collada-dom-2.2.1.orig/dom/Makefile
++++ collada-dom-2.2.1/dom/Makefile
+@@ -230,13 +230,19 @@ install: uninstall
+ # Write the install prefix to the file make/installPrefix.mk so we can retrieve it for uninstalling.
+ 	echo 'installPrefix := $(prefix)' > make/installPrefix.mk
+ # Install headers
+-	cp -R include $(prefix)/include/colladadom
++	mkdir -p $(prefix)/include/colladadom
++	mkdir -p $(prefix)/lib
++	cp -R include/* $(prefix)/include/colladadom
+ # We write this as a loop to avoid an error when there are no files to remove
+ 	for svndir in $(find $(prefix)/include/colladadom -name '.svn'); do rm -rf $svndir; done
+ # Install linux-1.4 libs
+ 	if [ -d build/linux-1.4 ]; then cp -P build/linux-1.4/libcollada*dom* $(prefix)/lib; fi;
+ # Install linux-1.4-d libs
+ 	if [ -d build/linux-1.4-d ]; then cp -P build/linux-1.4-d/libcollada*dom* $(prefix)/lib; fi;
++# Install linux-1.5 libs
++	if [ -d build/linux-1.5 ]; then cp -P build/linux-1.5/libcollada*dom* $(prefix)/lib; fi;
++# Install linux-1.5-d libs
++	if [ -d build/linux-1.5-d ]; then cp -P build/linux-1.5-d/libcollada*dom* $(prefix)/lib; fi;
+ else ifeq ($(oss),mac)
+ install: uninstall
+ 	$(call printMessage,Installing to $(prefix))
+--- collada-dom-2.2.1.orig/dom/make/dom.mk
++++ collada-dom-2.2.1/dom/make/dom.mk
+@@ -36,7 +36,7 @@ libOpts += external-libs/tinyxml/lib/$(b
+ endif
+ 
+ ifeq ($(os),linux)
+-libOpts += -lpcre -lpcrecpp
++libOpts += -lpcrecpp -lboost_filesystem -lboost_system
+ else 
+ # On Mac, Windows and PS3 we need to be told where to find pcre
+ ifeq ($(os),windows)
+@@ -59,8 +59,12 @@ endif
+ 
+ # minizip
+ includeOpts += -Iexternal-libs/minizip/include
++ifeq ($(os),linux)
++libOpts += build/$(buildID)-$(colladaVersion)$(debugSuffix)/libminizip.a -lz
++else
+ libOpts += -Lbuild/$(buildID)-$(colladaVersion)$(debugSuffix)/
+ libOpts += -lminizip$(debugSuffix)
++endif
+ # as we link minizip static on osx, we need to link against zlib, too.
+ ifeq ($(os),mac)
+ libOpts += -lz
+--- collada-dom-2.2.1.orig/dom/make/minizip.mk
++++ collada-dom-2.2.1/dom/make/minizip.mk
+@@ -16,13 +16,11 @@ ifneq ($(findstring $(os),linux mac),)
+ ccFlags += -fPIC
+ endif
+ 
+-# mingw: link agaist zlib
++libOpts += -lz
+ ifeq ($(findstring $(os),linux mac),)
+ libOpts += -Lexternal-libs/libxml2/mingw/lib
+-libOpts += -lz
+ else ifeq ($(os),mac)
+ # libOpts += -Lexternal-libs/libxml2/mingw/lib
+-libOpts += -lz
+ ccFlags += -arch ppc -arch i386
+ endif
+ 
+--- collada-dom-2.2.1.orig/dom/make/rules.mk
++++ collada-dom-2.2.1/dom/make/rules.mk
+@@ -94,7 +94,7 @@ $(sharedLibMajorMinor): ccFlags := $(ccF
+ $(sharedLibMajorMinor): libOpts := $(libOpts)
+ $(sharedLibMajorMinor): $(dependentLibs) $(obj) | $(dir $(sharedLibMajorMinor))
+ 	$(call printMessage,Linking $@)
+-	$(cc) $(ccFlags) -shared -o $@ $^ $(libOpts)
++	$(cc) $(ccFlags) -shared -Wl,-soname,$(notdir $(sharedLibMajor)) -o $@ $^ $(libOpts)
+ 
+ $(sharedLibMajor): $(sharedLibMajorMinor) | $(dir $(sharedLibMajor))
+ 	cd $(dir $@)  &&  ln -sf $(notdir $^) $(notdir $@)
+--- collada-dom-2.2.1.orig/dom/make/rulesC.mk
++++ collada-dom-2.2.1/dom/make/rulesC.mk
+@@ -98,7 +98,7 @@ $(sharedLibMajorMinor): ccFlags := $(ccF
+ $(sharedLibMajorMinor): libOpts := $(libOpts)
+ $(sharedLibMajorMinor): $(dependentLibs) $(obj) | $(dir $(sharedLibMajorMinor))
+ 	@echo Linking $@
+-	$(cc) $(ccFlags) -shared -o $@ $^ $(libOpts)
++	$(cc) $(ccFlags) -shared -Wl,-soname,$(notdir $(sharedLibMajor)) -o $@ $^ $(libOpts)
+ 
+ $(sharedLibMajor): $(sharedLibMajorMinor) | $(dir $(sharedLibMajor))
+ 	cd $(dir $@)  &&  ln -sf $(notdir $^) $(notdir $@)

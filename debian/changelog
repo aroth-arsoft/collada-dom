@@ -1,0 +1,24 @@
+collada-dom (2.2.1-0ubuntu0.1~aroth~ppa2) saucy; urgency=low
+
+  * rebuild for saucy
+
+ -- Andreas Roth <aroth@arsoft-online.com>  Wed, 23 Oct 2013 08:00:44 +0200
+
+collada-dom (2.2.1-0ubuntu0~aroth~ppa1) oneiric; urgency=low
+
+  * first build for oneiric
+
+ -- Andreas Roth <aroth@arsoft-online.com>  Thu, 17 Nov 2011 06:53:15 +0100
+
+collada-dom (2.2.1-0ubuntu0ppa1) lucid; urgency=low
+
+  * Initial release (Closes: #589152), based on the work of Benjamin Bozou
+    and Gregory Potdevin.
+    This version is based on the release 2.2.1 of collada-dom, which is not
+    available as a download but as an svn tag on sourceforge. The upstream
+    release is repackaged because of non DFSG-compatible test files.
+    In the process, code copies and sister project (rt, fx, viewer) are
+    removed too. See debian/repackage.sh for details.
+
+ -- Sébastien Barthélémy <barthelemy@crans.org>  Thu, 22 Jul 2010 17:03:17 +0200
+

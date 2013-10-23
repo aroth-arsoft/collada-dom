@@ -1,0 +1,5 @@
+- check the static lib is ok (it seems that coherencytest fails with it)
+- ensure we really need -lz to create _both_ libminizip.a _and_ libcollada14.so
+- use libminizip from zlib (once they ship it #574798)
+
+

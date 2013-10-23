@@ -1,0 +1,60 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+DESTDIR := $(CURDIR)/debian/tmp
+
+UPSTREAM_VERSION := 2.2.1
+PKG_VERSION := collada-dom_$(UPSTREAM_VERSION)
+get-orig-src:
+	svn export \
+	 https://collada-dom.svn.sourceforge.net/svnroot/collada-dom/tags/2.2.1 \
+	 $(PKG_VERSION)
+	# repackage
+	debian/repackage.sh $(PKG_VERSION)
+	GZIP='--best --no-name' tar czf ../$(PKG_VERSION)+dfsg1.orig.tar.gz \
+	 $(PKG_VERSION)
+	rm -rf $(PKG_VERSION)
+
+override_dh_auto_build: build-libcollada14dom build-libcollada15dom
+
+build-libminizip-for-libcollada14dom:
+	dh_testdir
+	$(MAKE) os=linux project=minizip colladaVersion=1.4 -C dom
+
+build-libminizip-for-libcollada15dom: build-libminizip-for-libcollada14dom
+	dh_testdir
+	# we copy the lib from the libcollada14dom build instead of running
+	# $(MAKE) os=linux project=minizip colladaVersion=1.5 -C dom
+	mkdir -p dom/build/linux-1.5
+	cp dom/build/linux-1.4/libminizip.* dom/build/linux-1.5
+
+build-libcollada14dom: build-libminizip-for-libcollada14dom
+	dh_testdir
+	$(MAKE) os=linux project=dom colladaVersion=1.4 -C dom
+
+build-libcollada15dom: build-libminizip-for-libcollada15dom
+	dh_testdir
+	$(MAKE) os=linux project=dom colladaVersion=1.5 -C dom
+
+override_dh_auto_clean:
+	$(MAKE) os=linux project=minizip colladaVersion=1.4 clean -C dom
+	$(MAKE) os=linux project=minizip colladaVersion=1.5 clean -C dom
+	$(MAKE) os=linux project=dom colladaVersion=1.4 clean -C dom
+	$(MAKE) os=linux project=dom colladaVersion=1.5 clean -C dom
+
+override_dh_clean:
+	rm -f dom/make/installPrefix.mk
+	dh_clean
+
+override_dh_auto_install:
+	$(MAKE) os=linux project=dom prefix=$(DESTDIR)/usr install -C dom
+
+%:
+	dh  $@

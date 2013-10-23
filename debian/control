@@ -1,0 +1,40 @@
+Source: collada-dom
+Priority: extra
+Maintainer: Sébastien Barthélémy <barthelemy@crans.org>
+Build-Depends: debhelper (>= 7.0.50~), libboost-filesystem-dev, libxml2-dev, libpcre3-dev, zlib1g-dev
+Standards-Version: 3.9.4
+Section: libs
+Homepage: https://sourceforge.net/projects/collada-dom
+Vcs-Git: git://github.com/sbarthelemy/collada-dom.git
+Vcs-browser: http://github.com/sbarthelemy/collada-dom
+
+Package: libcolladadom-dev
+Section: libdevel
+Architecture: any
+Depends: libcollada14dom2 (= ${binary:Version}), libcollada15dom2 (= ${binary:Version}), ${misc:Depends}
+Description: COLLADA 1.4 and 1.5 Document Object Model (DOM) development files
+ The COLLADA Document Object Model (DOM) is an application programming
+ interface (API) that provides a C++ object representation of a COLLADA
+ XML instance document.
+ This package contains the headers and static libraries built for COLLADA
+ 1.4 and 1.5.
+
+Package: libcollada14dom2
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: COLLADA 1.4 Document Object Model (DOM) shared lib
+ The COLLADA Document Object Model (DOM) is an application programming
+ interface (API) that provides a C++ object representation of a COLLADA
+ XML instance document.
+ This package contains the shared library built for COLLADA 1.4.
+
+Package: libcollada15dom2
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: COLLADA 1.5 Document Object Model (DOM) shared lib
+ The COLLADA Document Object Model (DOM) is an application programming
+ interface (API) that provides a C++ object representation of a COLLADA
+ XML instance document.
+ This package contains the shared library built for COLLADA 1.5.
