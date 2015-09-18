@@ -1,7 +1,7 @@
 Source: collada-dom
 Priority: extra
 Maintainer: Sébastien Barthélémy <barthelemy@crans.org>
-Build-Depends: debhelper (>= 7.0.50~), libboost-filesystem-dev, libxml2-dev, libpcre3-dev, zlib1g-dev
+Build-Depends: debhelper (>= 9), libboost-filesystem-dev, libxml2-dev, libpcre3-dev, zlib1g-dev
 Standards-Version: 3.9.4
 Section: libs
 Homepage: https://sourceforge.net/projects/collada-dom

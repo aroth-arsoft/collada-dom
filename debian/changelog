@@ -1,4 +1,16 @@
-collada-dom (2.2.1-0ubuntu0.1~aroth~ppa3) saucy; urgency=low
+collada-dom (2.2.1-0ubuntu0.2~aroth~ppa1) wily; urgency=medium
+
+  * rebuild for wily
+
+ -- Andreas Roth <aroth@arsoft-online.com>  Fri, 18 Sep 2015 07:22:56 +0200
+
+collada-dom (2.2.1-0ubuntu0.1~aroth~ppa3~vivid1) vivid; urgency=medium
+
+  * rebuild for vivid
+
+ -- Andreas Roth <aroth@arsoft-online.com>  Wed, 06 May 2015 06:42:13 +0200
+
+collada-dom (2.2.1-0ubuntu0.1~aroth~ppa3~trusty1) trusty; urgency=low
 
   * rebuild for saucy and trusty
 
